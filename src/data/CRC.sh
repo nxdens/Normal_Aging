@@ -15,13 +15,15 @@ SERVER=$SLURM_SUBMIT_HOST
 NODE=$SLURMD_NODENAME
 # The directory from which sbatch was invoked (e.g. proj/DBN/src/data/MPP)
 SERVERDIR=$SLURM_SUBMIT_DIR
-
+LIW82=/pylon5/med200002p/liw82/
 # This function gets called by opts_ParseArguments when --help is specified
 usage() {
     CURDIR="$(pwd)"
+    # debug for folders 
     echo $FS_LICENSE
     echo $CURDIR
-    echo $SCRATCH
+    echo $LIW82
+
     # header text
     echo "
 $log_ToolName: Queueing script for running MPP on Slurm-based computing clusters
