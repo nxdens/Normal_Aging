@@ -59,15 +59,7 @@ input_parser() {
 
     # Make slurm logs directory
     mkdir -p "$(dirname "$0")"/logs/slurm
-    subjectPath=$(ls -d /pylon5/med200002p/liw82/KLU/90*/80*)
-    IFR='\r\n'
-    echo $subjectPath
-    read -a subjectArr <<< "$subjectPath"
-    echo $subjectArr
-    for index in ${!subjectArr[@]}; do
-        echo $index/${#subjectArr[@]}
-    done
-    files=187
+    mapfile -t subjectArr < fold.txt
 
     
 	queuing_command="sbatch \
