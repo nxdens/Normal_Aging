@@ -61,8 +61,7 @@ input_parser() {
     # Make slurm logs directory
     mkdir -p "$(dirname "$0")"/logs/slurm
     echo $subjectPath
-    files=${#subjectPath[@]}
-    echo $files
+    files=187
 
     
 	queuing_command="sbatch \
@@ -77,7 +76,7 @@ input_parser() {
         --mail-user=$mailUser \
         --mem=$mem \
         --array=0-$files"
-    #${queuing_command} echo $subjectPath[$SLURM_ARRAY_TASK_ID]
+    ${queuing_command} echo $subjectPath[$SLURM_ARRAY_TASK_ID]
     #${queuing_command} CRC.sh \
     #      --subjectPath=$subjectPath
     #      --printcom=$RUN
