@@ -18,6 +18,8 @@ SERVERDIR=$SLURM_SUBMIT_DIR
 
 # This function gets called by opts_ParseArguments when --help is specified
 usage() {
+    CURDIR = pwd
+    echo $CURDIR
     # header text
     echo "
 $log_ToolName: Queueing script for running MPP on Slurm-based computing clusters
