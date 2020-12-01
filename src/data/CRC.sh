@@ -29,8 +29,7 @@ usage() {
 $log_ToolName: Queueing script for running MPP on Slurm-based computing clusters
 
 Usage: $log_ToolName
-                    --subjectIDs=<ID>                Path to folder with subject images
-                    --scanIDs=<ID>           File path or list with subject IDs
+                    --subjectPath=<path>                Path to folder with subject images must be absolute
                     [--printcom=command]                if 'echo' specified, will only perform a dry run.
 
     PARAMETERs are [ ] = optional; < > = user supplied value
@@ -135,6 +134,7 @@ main() {
 cleanup() {
     #need to find psc version
     #crc-job-stats.py # gives stats of job, wall time, etc.
+    
 }
 
 early() {
