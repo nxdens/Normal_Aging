@@ -104,8 +104,6 @@ setup() {
 
 }
 
-# Join function with a character delimiter
-join_by() { local IFS="$1"; shift; echo "$*"; }
 
 main() {
     ###############################################################################
@@ -124,7 +122,7 @@ main() {
     cd $BASE
 
     # Submit to be run the MPP.sh script with all the specified parameter values
-    singularity exec $IMAGE recon-all -sd $SUBJECTDIR -i $IMAGEDIR -s $scanIDs -all
+    singularity exec $IMAGE recon-all -sd $SUBJECTDIR -i $IMAGEDIR -s $scanIDs -all \
         1> $LOGDIR/$SubjectID.out \
         2> $LOGDIR/$SubjectID.err
 }
