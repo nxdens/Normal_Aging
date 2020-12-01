@@ -91,7 +91,12 @@ setup() {
     # Report major script control variables 
 	echo "ID: $subjectIDs"
     echo "Scan: $scanIDs"
+    echo "Base directory: $BASE"
+    echo "Image directory: $IMAGEDIR"
+    echo "Subject directory: $SUBJECTDIR"
 	echo "printcom: ${RUN}"
+
+
 
     # Create log folder
     LOGDIR="${SUBJECTDIR}/logs/"
