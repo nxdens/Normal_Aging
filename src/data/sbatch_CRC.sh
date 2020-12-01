@@ -76,7 +76,7 @@ input_parser() {
         --array=0-$files"
 
     ${queuing_command} CRC.sh \
-          --subjectPath=${subjectArr[$SLURM_ARRAY_TASK_ID]}
+          --subjectPath=${subjectArr[$SLURM_ARRAY_TASK_ID]} \
           --printcom=$RUN
 }
 
