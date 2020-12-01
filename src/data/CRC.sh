@@ -14,7 +14,7 @@ SERVER=$SLURM_SUBMIT_HOST
 NODE=$SLURMD_NODENAME
 # The directory from which sbatch was invoked (e.g. proj/DBN/src/data/MPP)
 SERVERDIR=$SLURM_SUBMIT_DIR
-LIW82=/pylon5/med200002p/liw82/
+LIW82=/pylon5/med200002p/liw82
 IMAGE=/pylon5/med200002p/liw82/freesurfer_7.1.1.sif
 # This function gets called by opts_ParseArguments when --help is specified
 usage() {
@@ -58,12 +58,11 @@ input_parser() {
 
 setup() {
     SSH=/usr/bin/ssh
-    echo "ID: $subjectIDs"
-    echo "Scan: $subjectIDs"
+    
     # The directory holding the data for the subject correspoinding ot this job
     # pass the path to each scan for each subject to each job -lw
-    BASE=$LIW82/KLU/$subjectIDs/$scanIDS/
-    IMAGEDIR=$BASE/converted/Hires/
+    BASE=$LIW82/KLU/$subjectIDs/$scanIDS
+    IMAGEDIR=$BASE/converted/Hires/${SCANIDs}_Hires.nii
     
     # Node directory that where computation will take place
     SUBJECTDIR=$BASE/step_01_Freesurfer/
@@ -90,7 +89,8 @@ setup() {
     studyFolderBasename=`basename $BASE`;
 
     # Report major script control variables 
-	echo "subject:${SubjectID}"
+	echo "ID: $subjectIDs"
+    echo "Scan: $scanIDs"
 	echo "printcom: ${RUN}"
 
     # Create log folder
@@ -119,7 +119,7 @@ main() {
     cd $BASE
 
     # Submit to be run the MPP.sh script with all the specified parameter values
-    singularity exec $IMAGE recon-all -sd $studyFolder -i imagepath -s $subjectID -all
+    singularity exec $IMAGE recon-all -sd $SUBJECTDIR -i $IMAGEDIR -s $scanIDs -all
         1> $LOGDIR/$SubjectID.out \
         2> $LOGDIR/$SubjectID.err
 }
