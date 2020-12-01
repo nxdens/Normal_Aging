@@ -60,8 +60,11 @@ input_parser() {
     # Make slurm logs directory
     mkdir -p "$(dirname "$0")"/logs/slurm
     mapfile -t subjectArr < fold.txt
-
-    
+    echo $subjectArr
+    for index in ${!subjectArr[@]}; do
+        echo $index/${#subjectArr[@]}
+    done
+    files=187
 	queuing_command="sbatch \
         --job-name=KLU \
         --partition=$partition \
