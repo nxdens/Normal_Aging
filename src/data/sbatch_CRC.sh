@@ -62,7 +62,7 @@ input_parser() {
     subjectPath=$(ls -d /pylon5/med200002p/liw82/KLU/90*/80*)
     IFR='/n'
     echo $subjectPath
-    read -a subjectArr <<< "$subjectPath"
+    read -ra subjectArr <<< "$subjectPath"
     echo $subjectArr
     for index in ${!subjectArr[@]}; do
         echo $index/${#subjectArr[@]}
