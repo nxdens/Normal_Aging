@@ -61,6 +61,7 @@ input_parser() {
     mkdir -p "$(dirname "$0")"/logs/slurm
     subjectPath=$(ls -d /pylon5/med200002p/liw82/KLU/90*/80*)
     IFR='/n'
+    echo $subjectPath
     read -a subjectArr <<< "$subjectPath"
     echo $subjectArr
     for index in ${!subjectArr[@]}; do
