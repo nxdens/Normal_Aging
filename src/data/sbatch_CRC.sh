@@ -74,7 +74,7 @@ input_parser() {
         --mail-user=$mailUser \
         --mem=$mem \
         --array=0-$files"
-    ${queuing_command} echo ${subjectArr[$SLURM_ARRAY_TASK_ID]}
+    ${queuing_command} test.sh --subjectPath=${subjectArr[$SLURM_ARRAY_TASK_ID]}
     #${queuing_command} CRC.sh \
     #      --subjectPath=${subjectArr[$SLURM_ARRAY_TASK_ID]} \
     #      --printcom=$RUN
