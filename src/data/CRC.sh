@@ -66,7 +66,7 @@ setup() {
     
     # Node directory that where computation will take place
     SUBJECTDIR=$BASE/step_01_Freesurfer/
-    rm -r SUBJECTDIR
+    rm -r $SUBJECTDIR
     mkdir -p $SUBJECTDIR
 
     NCPU=`scontrol show hostnames $SLURM_JOB_NODELIST | wc -l`
