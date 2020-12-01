@@ -60,7 +60,8 @@ setup() {
     # The directory holding the data for the subject correspoinding ot this job
     # pass the path to each scan for each subject to each job -lw
     IFS='/'
-    read -a pathArr <<< "$subjectPath"
+    read -ra pathArr <<< "$subjectPath"
+    echo $pathArr
     subjectIDs=${pathArr}[4]
     scanIDs=${pathArr}[5]
     BASE=$LIW82/KLU/$subjectIDs/$scanIDs
