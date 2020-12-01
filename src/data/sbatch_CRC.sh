@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -eu
+set -e
 
 # Load input parser functions
 setup=$( cd "$(dirname "$0")" ; pwd )
