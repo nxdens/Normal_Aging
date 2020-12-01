@@ -60,8 +60,8 @@ input_parser() {
     # Make slurm logs directory
     mkdir -p "$(dirname "$0")"/logs/slurm
     subjectPath=$(ls -d /pylon5/med200002p/liw82/KLU/90*/80*)
-    IFR=' '
-    read -ra subjectArr <<< "$subjectPath"
+    IFR='/n'
+    read -a subjectArr <<< "$subjectPath"
     echo $subjectArr
     for index in ${!subjectArr[@]}; do
         echo $index/${#subjectArr[@]}
