@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --image=<path_to_image>
+#SBATCH --image=/pylon5/med200002p/liw82/freesurfer_7.1.1.sif
 # or skip the above line and call singularity exec <path_to_image> <command> instead of just <command> in the main portion of the code
 #SBATCH --error=./logs/slurm/slurm-%A_%a.err
 #SBATCH --output=./logs/slurm/slurm-%A_%a.out
