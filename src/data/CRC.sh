@@ -8,7 +8,7 @@
 module purge # Make sure the modules environment is sane
 module load singularity
 # or use #SBATCH --export=all module purge module load gcc/5.2.0 fsl/5.0.11-centos matlab/R2019b singularity
-EXPORT FS_LICENSE=/pylon5/med200002p/liw82/license.txt
+export FS_LICENSE=/pylon5/med200002p/liw82/license.txt
 # The hostname from which sbatch was invoked (e.g. cluster)
 SERVER=$SLURM_SUBMIT_HOST
 # The name of the node running the job script (e.g. node10)
@@ -62,7 +62,6 @@ Usage: $log_ToolName
 
 input_parser() {
     # Load input parser functions
-    . "${SERVERDIR}/setUpMPP.sh"
     . "${DBN_Libraries}/newopts.shlib" "$@"
 
     opts_AddMandatory '--studyFolder' 'studyFolder' 'raw data folder path' "a required value; is the path to the study folder holding the raw data. Don't forget the study name (e.g. /mnt/storinator/edd32/data/raw/ADNI)"
@@ -125,7 +124,6 @@ setup() {
 
     # Report major script control variables to usertart_auto_complete)cho "studyFolder: ${SERVERDATADIR}"
 	echo "subject:${SubjectID}"
-	echo "environmentScript: setUpMPP.sh"
 	echo "class: ${class}"
 	echo "domainX: ${domainX}"
 	echo "domainY: ${domainY}"
