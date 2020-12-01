@@ -45,8 +45,7 @@ input_parser() {
     # Load input parser functions
     . "./opts.shlib" "$@"
 
-    opts_AddMandatory '--subjectIDs' 'subjectIDs' 'path to file with subject IDs' "a required value; path to a file with the IDs of the subject to be processed (e.g. /mnt/storinator/edd32/data/raw/ADNI/subjects.txt)" "--subject" "--subjectList" "--subjList"
-    opts_AddMandatory '--scanIDs' 'scanIDs' 'path to file with subject IDs' "a required value; path to a file with the IDs of the subject to be processed (e.g. /mnt/storinator/edd32/data/raw/ADNI/subjects.txt)" "--subject" "--subjectList" "--subjList"
+    opts_AddMandatory '--subjectPath' 'subjectPath' 'path to file with subject IDs' "a required value; path to a file with the IDs of the subject to be processed must be absolute path (e.g. /pylon5/med200002p/liw82/KLU/90*/80*)" "--subject" "--subjectList" "--subjList"
     opts_AddOptional '--printcom' 'RUN' 'do (not) perform a dray run' "an optional value; If RUN is not a null or empty string variable, then this script and other scripts that it calls will simply print out the primary commands it otherwise would run. This printing will be done using the command specified in the RUN variable, e.g., echo" "" "--PRINTCOM" "--printcom"
 
     opts_ParseArguments "$@"
@@ -61,6 +60,10 @@ setup() {
     
     # The directory holding the data for the subject correspoinding ot this job
     # pass the path to each scan for each subject to each job -lw
+    IFS='/'
+    read -a pathArr <<< $subjectPath
+    subjectIDs=pathArr[4]
+    scanIDs=pathArr[5]
     BASE=$LIW82/KLU/$subjectIDs/$scanIDs
     IMAGEDIR="$BASE/converted/Hires/${scanIDs}_Hires.nii"
     
@@ -130,8 +133,8 @@ main() {
 }
 
 cleanup() {
-
-    crc-job-stats.py # gives stats of job, wall time, etc.
+    #need to find psc version
+    #crc-job-stats.py # gives stats of job, wall time, etc.
 }
 
 early() {

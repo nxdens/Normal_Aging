@@ -92,17 +92,9 @@ input_parser() {
     opts_AddOptional  '--mail-type' 'mailType' 'type of mail' "an optional value; notify user by email when certain event types occur. Default: FAIL,END" "FAIL,END"
     opts_AddOptional  '--mail-user' 'mailUser' 'user email' "an optional value; User to receive email notification of state changes as defined by --mail-type. Default: eduardojdiniz@gmail.com" "eduardojdiniz@gmail.com"
 
-    opts_AddMandatory '--studyFolder' 'studyFolder' 'raw data folder path' "a required value; is the path to the study folder holding the raw data. Don't forget the study name (e.g. /mnt/storinator/edd32/data/raw/ADNI)"
-    opts_AddMandatory '--subjects' 'subjects' 'path to file with subject IDs' "an required value; path to a file with the IDs of the subject to be processed (e.g. /mnt/storinator/edd32/data/raw/ADNI/subjects.txt)" "--subject" "--subjectList" "--subjList"
-    opts_AddOptional  '--class' 'class' 'Class Name' "an optional value; is the name of the class. Default: 3T. Supported: 3T | 7T | T1w_MPR | T2w_SPC" "3T"
-    opts_AddOptional  '--domainX' 'domainX' 'Domain X' "an optional value; is the name of the domain X. Default: T1w_MPR. Supported: 3T | 7T | T1w_MPR | T2w_SPC" "T1w_MPR"
-    opts_AddOptional  '--domainY' 'domainY' 'Domain Y' "an optional value; is the name of the domain Y. Default: T2w_SPC. Supported: 3T | 7T | T1w_MPR | T2w_SPC" "T2w_SPC"
-    opts_AddOptional  '--windowSize'  'windowSize' 'window size for bias correction' "an optional value; window size for bias correction; for 7T MRI, the optimal value ranges between 20 and 30. Default: 30." "30"
-    opts_AddOptional '--brainSize' 'brainSize' 'Brain Size' "an optional value; the average brain size in mm. Default: 150." "150"
-    opts_AddOptional '--customBrain'  'CustomBrain' 'If custom mask or structural images provided' "an optional value; If you have created a custom brain mask saved as <subject>/<domainX>/custom_brain_mask.nii.gz, specify MASK. If you have created custom structural images, e.g.: '<subject>/<domainX>/<domainX>_bc.nii.gz - '<subject>/<domainX>/<domainX>_bc_brain.nii.gz - '<subject>/<domainY>/<domainY>_bc.nii.gz - '<subject>/<domainY>/<domainY>_bc_brain.nii.gz' to be used when peforming MNI152 Atlas registration, specify CUSTOM. When MASK or CUSTOM is specified, only the AtlasRegistration step is run. If the parameter is omitted or set to NONE (the default), standard image processing will take place. NOTE: This option allows manual correction of brain images in cases when they were not successfully processed and/or masked by the regular use of the pipelines. Before using this option, first ensure that the pipeline arguments used were correct and that templates are a good match to the data. Default: NONE. Supported: NONE | MASK| CUSTOM." "NONE"
-    opts_AddOptional  '--brainExtractionMethod'  'BrainExtractionMethod' 'Registration (Segmentation) based brain extraction method' "an optional value; The method used to perform brain extraction. Default: RPP. Supported: RPP | SPP." "RPP"
-    opts_AddOptional  '--MNIRegistrationMethod'  'MNIRegistrationMethod' '(non)linear registration to MNI' "an optional value; if it is set then only an affine registration to MNI is performed, otherwise, a nonlinear registration to MNI is performed. Default: linear. Supported: linear | nonlinear." "linear"
-    opts_AddOptional  '--printcom' 'RUN' 'do (not) perform a dray run' "an optional value; If RUN is not a null or empty string variable, then this script and other scripts that it calls will simply print out the primary commands it otherwise would run. This printing will be done using the command specified in the RUN variable, e.g., echo" "" "--PRINTCOM" "--printcom"
+    opts_AddMandatory '--subjectIDs' 'subjectIDs' 'path to file with subject IDs' "a required value; path to a file with the IDs of the subject to be processed (900 number)" "--subject" "--subjectList" "--subjList"
+    opts_AddMandatory '--scanIDs' 'scanIDs' 'path to file with subject IDs' "a required value; path to a file with the IDs of the subject to be processed (800 number)" "--subject" "--subjectList" "--subjList"
+    opts_AddOptional '--printcom' 'RUN' 'do (not) perform a dray run' "an optional value; If RUN is not a null or empty string variable, then this script and other scripts that it calls will simply print out the primary commands it otherwise would run. This printing will be done using the command specified in the RUN variable, e.g., echo" "" "--PRINTCOM" "--printcom"
 
 
     opts_ParseArguments "$@"
@@ -127,7 +119,7 @@ input_parser() {
     studyName="$(basename -- $studyFolder)"
 
 	queuing_command="sbatch \
-        --job-name=${studyName}_${BrainExtractionMethod}_${MNIRegistrationMethod}_${class}_${jobName} \
+        --job-name=${studyName}_${subjectIDs}_${scanIDs}_${jobName} \
         --partition=$partition \
         --exclude=$exclude \
         --nodes=$nodes \
@@ -140,15 +132,8 @@ input_parser() {
         --array=$array"
 
     ${queuing_command} CRC.sh \
-          --studyFolder=$studyFolder \
-          --subjects=$subjects \
-          --class=$class \
-          --domainX=$domainX \
-          --domainY=$domainY \
-          --windowSize=$windowSize \
-          --customBrain="$CustomBrain" \
-          --MNIRegistrationMethod=$MNIRegistrationMethod \
-          --brainExtractionMethod=$BrainExtractionMethod \
+          --subjectIDs=$subjectIDs
+          --scanIDs=$scanIDs
           --printcom=$RUN
 }
 
