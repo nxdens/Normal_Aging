@@ -56,7 +56,7 @@ input_parser() {
 
     # Display the parsed/default values
     opts_ShowValues
-
+    set -x
     # Make slurm logs directory
     mkdir -p "$(dirname "$0")"/logs/slurm
     mapfile -t subjectArr < fold.txt
@@ -74,7 +74,7 @@ input_parser() {
         --mail-user=$mailUser \
         --mem=$mem \
         --array=0-$files"
-        
+
     ${queuing_command} CRC.sh \
           --subjectPath=${subjectArr[$SLURM_ARRAY_TASK_ID]}
           --printcom=$RUN
