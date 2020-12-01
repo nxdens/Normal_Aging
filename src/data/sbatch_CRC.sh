@@ -61,10 +61,9 @@ input_parser() {
     # Make slurm logs directory
     mkdir -p "$(dirname "$0")"/logs/slurm
     echo $subjectPath
-    files=ls -d $subjectPath
-    numFiles=wc -l $files
+    files=${#subjectPath[@]}
     echo $files
-    echo $numFiles
+
     
 	queuing_command="sbatch \
         --job-name=KLU \
