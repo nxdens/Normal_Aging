@@ -60,7 +60,7 @@ input_parser() {
     # Make slurm logs directory
     mkdir -p "$(dirname "$0")"/logs/slurm
     subjectPath=$(ls -d /pylon5/med200002p/liw82/KLU/90*/80*)
-    IFR='/n'
+    IFR='/t'
     echo $subjectPath
     read -ra subjectArr <<< "$subjectPath"
     echo $subjectArr
