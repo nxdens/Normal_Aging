@@ -134,7 +134,7 @@ main() {
 cleanup() {
     #need to find psc version
     #crc-job-stats.py # gives stats of job, wall time, etc.
-    
+    echo 'cleanup'
 }
 
 early() {
