@@ -86,4 +86,4 @@ setup() {
 }
 input_parser "$@"
 setup
-echo $subjectPath > $LOGDIR/$SubjectID.out
+echo $subjectPath > $LOGDIR/$subjectID.out
