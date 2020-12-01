@@ -73,10 +73,10 @@ input_parser() {
             --export=$export \
             --mail-type=$mailType \
             --mail-user=$mailUser "
-
-        ${queuing_command} CRC.sh \
-            --subjectPath=${subjectArr[$i]} \
-            --printcom=$RUN
+        ${queuing_command} test.sh --subjectPath=${subjectArr[$SLURM_ARRAY_TASK_ID]}
+        #${queuing_command} CRC.sh \
+        #    --subjectPath=${subjectArr[$i]} \
+        #    --printcom=$RUN
     done
 }
 

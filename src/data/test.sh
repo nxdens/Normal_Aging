@@ -1,4 +1,6 @@
 #!/bin/bash
+
+LIW82=/pylon5/med200002p/liw82
 input_parser() {
     # Load input parser functions
     . "./opts.shlib" "$@"
@@ -11,6 +13,29 @@ input_parser() {
     # Display the parsed/default values
     opts_ShowValues
 }
+usage() {
+    CURDIR="$(pwd)"
+    # debug for folders 
+    echo $FS_LICENSE
+    echo $CURDIR
+    echo $LIW82
+
+    # header text
+    echo "
+$log_ToolName: Queueing script for running MPP on Slurm-based computing clusters
+
+Usage: $log_ToolName
+                    --subjectPath=<path>                Path to folder with subject images must be absolute
+                    [--printcom=command]                if 'echo' specified, will only perform a dry run.
+
+    PARAMETERs are [ ] = optional; < > = user supplied value
+
+    Values default to running the example with sample data
+"
+    # automatic argument descriptions
+    opts_ShowArguments
+}
+
 setup() {
     SSH=/usr/bin/ssh
     
