@@ -61,7 +61,7 @@ setup() {
     
     # The directory holding the data for the subject correspoinding ot this job
     # pass the path to each scan for each subject to each job -lw
-    BASE=$LIW82/KLU/$subjectIDs/$scanIDS
+    BASE=$LIW82/KLU/$subjectIDs/$scanIDs
     IMAGEDIR=$BASE/converted/Hires/${SCANIDs}_Hires.nii
     
     # Node directory that where computation will take place
