@@ -61,8 +61,8 @@ setup() {
     # pass the path to each scan for each subject to each job -lw
     IFS='/'
     read -a pathArr <<< $subjectPath
-    subjectIDs=pathArr[4]
-    scanIDs=pathArr[5]
+    subjectIDs=$pathArr[4]
+    scanIDs=$pathArr[5]
     BASE=$LIW82/KLU/$subjectIDs/$scanIDs
     IMAGEDIR="$BASE/converted/Hires/${scanIDs}_Hires.nii"
     
