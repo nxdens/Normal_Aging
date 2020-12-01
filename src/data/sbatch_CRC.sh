@@ -61,6 +61,9 @@ input_parser() {
     mkdir -p "$(dirname "$0")"/logs/slurm
     subjectPath=$(ls -d /pylon5/med200002p/liw82/KLU/90*/80*)
     echo $subjectPath
+    for index in ${!subjectPath[@]}; do
+        echo $index/${#subjectPath[@]}
+    done
     files=187
 
     
