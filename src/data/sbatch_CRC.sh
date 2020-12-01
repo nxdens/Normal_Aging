@@ -4,7 +4,6 @@ set -eu
 
 # Load input parser functions
 setup=$( cd "$(dirname "$0")" ; pwd )
-. "${DBN_Libraries}/newopts.shlib" "$@"
 
 get_subjList() {
     file_or_list=$1
