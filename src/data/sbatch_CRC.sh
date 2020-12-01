@@ -5,26 +5,6 @@ set -eu
 # Load input parser functions
 setup=$( cd "$(dirname "$0")" ; pwd )
 
-get_subjList() {
-    file_or_list=$1
-    subjList=""
-    # If a file with the subject ID was passed
-    if [ -f "$file_or_list" ] ; then
-        while IFS= read -r line || [[ -n "$line" ]]; do
-            subjList="$subjList $line"
-        done < "$file_or_list"
-    # Instead a list was passed
-    else
-        subjList="$file_or_list"
-    fi
-
-    # Sort subject list
-    IFS=$'\n' # only word-split on '\n'
-    subjList=( $( printf "%s\n" ${subjList[@]} | sort -n) ) # sort
-    IFS=$' \t\n' # restore the default
-    unset file_or_list
-}
-
 # This function gets called by opts_ParseArguments when --help is specified
 usage() {
     # header text
@@ -92,23 +72,11 @@ input_parser() {
     opts_AddOptional  '--mail-type' 'mailType' 'type of mail' "an optional value; notify user by email when certain event types occur. Default: FAIL,END" "FAIL,END"
     opts_AddOptional  '--mail-user' 'mailUser' 'user email' "an optional value; User to receive email notification of state changes as defined by --mail-type. Default: eduardojdiniz@gmail.com" "eduardojdiniz@gmail.com"
 
-    opts_AddMandatory '--subjectIDs' 'subjectIDs' 'path to file with subject IDs' "a required value; path to a file with the IDs of the subject to be processed (900 number)" "--subject" "--subjectList" "--subjList"
-    opts_AddMandatory '--scanIDs' 'scanIDs' 'path to file with subject IDs' "a required value; path to a file with the IDs of the subject to be processed (800 number)" "--subject" "--subjectList" "--subjList"
+    opts_AddMandatory '--subjectPath' 'subjectPath' 'path to file with subject IDs' "a required value; path to a file with the IDs of the subject to be processed must be absolute path (e.g. /pylon5/med200002p/liw82/KLU/90*/80*)" "--subject" "--subjectList" "--subjList"    
     opts_AddOptional '--printcom' 'RUN' 'do (not) perform a dray run' "an optional value; If RUN is not a null or empty string variable, then this script and other scripts that it calls will simply print out the primary commands it otherwise would run. This printing will be done using the command specified in the RUN variable, e.g., echo" "" "--PRINTCOM" "--printcom"
 
 
     opts_ParseArguments "$@"
-
-    # Get an index for each subject ID; It will be used to submit an array job
-    get_subjList $subjects
-    delim=""
-    array=""
-    i=1
-    for id in $subjList ; do
-        array="$array$delim$i"
-        delim=","
-		i=$(($i+1))
-    done
 
     # Display the parsed/default values
     opts_ShowValues
@@ -117,7 +85,8 @@ input_parser() {
     mkdir -p "$(dirname "$0")"/logs/slurm
 
     studyName="$(basename -- $studyFolder)"
-
+    files=wc -l $subjectPath
+    echo files
 	queuing_command="sbatch \
         --job-name=${studyName}_${subjectIDs}_${scanIDs}_${jobName} \
         --partition=$partition \
@@ -129,12 +98,11 @@ input_parser() {
         --mail-type=$mailType \
         --mail-user=$mailUser \
         --mem=$mem \
-        --array=$array"
-
-    ${queuing_command} CRC.sh \
-          --subjectIDs=$subjectIDs
-          --scanIDs=$scanIDs
-          --printcom=$RUN
+        --array=0-$files"
+    #${queuing_command} echo $subjectPath[$SLURM_ARRAY_TASK_ID]
+    #${queuing_command} CRC.sh \
+    #      --subjectIDs=$subjectPath
+    #      --printcom=$RUN
 }
 
 input_parser "$@"
