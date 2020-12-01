@@ -51,7 +51,7 @@ EXAMPLE_END
 #we want a "log error and abort" function, so use the shlib for that
 if [[ "$(type -t log_Err_Abort)" != "function" ]]
 then
-    source "$HOME/proj/local/libs/log.shlib" "$@"
+    source "./log.shlib" "$@"
 fi
 
 #takes things like "true", "YES", and outputs "1", "NO" is "0", throws error if unrecognized
