@@ -61,6 +61,9 @@ Usage: $log_ToolName
 
 
 input_parser() {
+    # Load input parser functions
+    . "./opts.shlib" "$@"
+    
     opts_AddOptional '--job-name' 'jobName' 'name for job allocation' "an optional value; specify a name for the job allocation. Default: RFLab" "RFLab"
     opts_AddOptional '--partition' 'partition' 'request a specifi partition' "an optional value; request a specific partition for the resource allocation (e.g. standard, workstation). Default: standard" "standard"
     opts_AddOptional  '--exclude' 'exclude' 'node to be excluded' "an optional value; Explicitly exclude certain nodes from the resources granted to the job. Default: None" ""
