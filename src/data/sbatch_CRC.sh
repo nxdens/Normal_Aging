@@ -62,9 +62,9 @@ input_parser() {
     subjectPath=$(ls -d /pylon5/med200002p/liw82/KLU/90*/80*)
     IFR=' '
     read -ra subjectArr <<< "$subjectPath"
-    echo $subjectPath[1]
-    for index in ${!subjectPath[@]}; do
-        echo $index/${#subjectPath[@]}
+    echo $subjectArr[1]
+    for index in ${!subjectArr[@]}; do
+        echo $index/${#subjectArr[@]}
     done
     files=187
 
@@ -81,7 +81,7 @@ input_parser() {
         --mail-user=$mailUser \
         --mem=$mem \
         --array=0-$files"
-    ${queuing_command} echo $subjectPath[$SLURM_ARRAY_TASK_ID]
+    ${queuing_command} echo $subjectArr[$SLURM_ARRAY_TASK_ID]
     #${queuing_command} CRC.sh \
     #      --subjectPath=$subjectPath
     #      --printcom=$RUN
