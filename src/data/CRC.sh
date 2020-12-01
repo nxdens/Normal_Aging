@@ -18,7 +18,8 @@ SERVERDIR=$SLURM_SUBMIT_DIR
 
 # This function gets called by opts_ParseArguments when --help is specified
 usage() {
-    CURDIR = pwd
+    CURDIR="$(pwd)"
+    echo $FS_LICENSE
     echo $CURDIR
     # header text
     echo "
