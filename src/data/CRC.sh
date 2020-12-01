@@ -58,7 +58,7 @@ input_parser() {
 
 setup() {
     SSH=/usr/bin/ssh
-    echo $subjects
+    echo "subjects: $subjects"
     # Looks in the file of IDs and get the correspoding subject ID for this job
     SubjectID=$(head -n $SLURM_ARRAY_TASK_ID "$subjects" | tail -n 1)
     # The directory holding the data for the subject correspoinding ot this job
