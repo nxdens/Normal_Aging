@@ -74,7 +74,7 @@ input_parser() {
         --mail-user=$mailUser \
         --mem=$mem \
         --array=0-$files \
-        --n-tasks-per-node=4"
+        --ntasks-per-node=4"
     #${queuing_command} test.sh --subjectPath=${subjectArr[$SLURM_ARRAY_TASK_ID]}
     ${queuing_command} CRC.sh \
           --subjectPath=${subjectArr[$SLURM_ARRAY_TASK_ID]} \
