@@ -12,8 +12,8 @@ usage() {
 $log_ToolName: Submitting script for running MPP on Slurm managed computing clusters
 
 Usage: $log_ToolName
-                    [--job-name=<name for job allocation>] default=RFLab
-                    [--partition=<request a specific partition>] default=workstation
+                    [--job-name=<name for job allocation>] default=KLU
+                    [--partition=<request a specific partition>] default=RM-shared
                     [--exclude=<node(s) to be excluded>] default=""
                     [--nodes=<minimum number of nodes allocated to this job>] default="1"
                     [--time=<limit on the total run time of the job allocation>] default="1"
@@ -23,33 +23,7 @@ Usage: $log_ToolName
                     [--mail-type=<type of mail>] default=FAIL,END
                     [--mail-user=<user email>] default=eduardojdiniz@gmail.com
 
-                    --studyFolder=<path>                Path to folder with subject images
-                    --subjects=<path or list>           File path or list with subject IDs
-                    [--class=<3T|7T|T1w_MPR|T2w_SPC>]   Name of the class
-                    [--domainX=<3T|7T|T1w_MPR|T2w_SPC>] Name of the domain X
-                    [--domainY=<3T|7T|T1w_MPR|T2w_SPC>] Name of the domain Y
-                    [--brainSize=<int>]                 Brain size estimate in mm, default 150 for humans
-                    [--windowSize=<int>]                window size for bias correction, default 30.
-                    [--brainExtractionMethod=<RPP|SPP>] Registration (Segmentation) based brain extraction
-                    [--MNIRegistrationMethod=<nonlinear|linear>] Do (not) use FNIRT for image registration to MNI
-                    [--custombrain=<NONE|MASK|CUSTOM>] If you have created a custom brain mask saved as
-                                                       '<subject>/<domainX>/custom_bc_brain_mask.nii.gz', specify 'MASK'.
-                                                       If you have created custom structural images, e.g.:
-                                                       - '<subject>/<domainX>/<domainX>_bc.nii.gz'
-                                                       - '<subject>/<domainX>/<domainX>_bc_brain.nii.gz'
-                                                       - '<subject>/<domainX>/<domainY>_bc.nii.gz'
-                                                       - '<subject>/<domainX>/<domainY>_bc_brain.nii.gz'
-                                                       to be used when peforming MNI152 Atlas registration, specify
-                                                       'CUSTOM'. When 'MASK' or 'CUSTOM' is specified, only the
-                                                        AtlasRegistration step is run.
-                                                        If the parameter is omitted or set to NONE (the default),
-                                                        standard image processing will take place.
-                                                        NOTE: This option allows manual correction of brain images
-                                                        in cases when they were not successfully processed and/or
-                                                        masked by the regular use of the pipelines.
-                                                        Before using this option, first ensure that the pipeline
-                                                        arguments used were correct and that templates are a good
-                                                        match to the data.
+                    --subjectPath=<path>                Path to folder with subject images
                     [--printcom=command]                if 'echo' specified, will only perform a dry run.
         PARAMETERs are [ ] = optional; < > = user supplied value
 
@@ -63,17 +37,17 @@ Usage: $log_ToolName
 input_parser() {
     # Load input parser functions
     . "./opts.shlib" "$@"
-    
-    opts_AddOptional '--job-name' 'jobName' 'name for job allocation' "an optional value; specify a name for the job allocation. Default: RFLab" "RFLab"
-    opts_AddOptional '--partition' 'partition' 'request a specifi partition' "an optional value; request a specific partition for the resource allocation (e.g. standard, workstation). Default: standard" "standard"
+
+    opts_AddOptional '--job-name' 'jobName' 'name for job allocation' "an optional value; specify a name for the job allocation. Default: KLU" "KLU"
+    opts_AddOptional '--partition' 'partition' 'request a specifi partition' "an optional value; request a specific partition for the resource allocation (e.g. standard, workstation). Default: RM" "RM"
     opts_AddOptional  '--exclude' 'exclude' 'node to be excluded' "an optional value; Explicitly exclude certain nodes from the resources granted to the job. Default: None" ""
     opts_AddOptional  '--nodes' 'nodes' 'minimum number of nodes allocated to this job' "an optional value; iIf a job node limit exceeds the number of nodes configured in the partiition, the job will be rejected. Default: 1" "1"
-    opts_AddOptional  '--time' 'time' 'limit on the total run time of the job allocation' "an optional value; When the time limit is reached, each task in each job step is sent SIGTERM followed by SIGKILL. Format: days-hours:minutes:seconds. Default 2 hours: None" "0-05:00:00"
+    opts_AddOptional  '--time' 'time' 'limit on the total run time of the job allocation' "an optional value; When the time limit is reached, each task in each job step is sent SIGTERM followed by SIGKILL. Format: days-hours:minutes:seconds. Default 2 hours: None" "05:00:00"
     opts_AddOptional '--ntasks' 'nTasks' 'maximum number tasks' "an optional value; sbatch does not launch tasks, it requests an allocation of resources and submits a batch script. This option advises the Slurm controller that job steps run within the allocation will launch a maximum of number tasks and to provide for sufficient resources. Default: 1" "1"
     opts_AddOptional  '--mem' 'mem' 'specify the real memory requried per node' "an optional value; specify the real memory required per node. Default: 2gb" "2gb"
     opts_AddOptional  '--export' 'export' 'export environment variables' "an optional value; Identify which environment variables from the submission environment are propagated to the launched application. Note that SLURM_* variables are always propagated. Default: All of the users environment will be loaded (either from callers environment or clean environment" "ALL"
     opts_AddOptional  '--mail-type' 'mailType' 'type of mail' "an optional value; notify user by email when certain event types occur. Default: FAIL,END" "FAIL,END"
-    opts_AddOptional  '--mail-user' 'mailUser' 'user email' "an optional value; User to receive email notification of state changes as defined by --mail-type. Default: eduardojdiniz@gmail.com" "eduardojdiniz@gmail.com"
+    opts_AddOptional  '--mail-user' 'mailUser' 'user email' "an optional value; User to receive email notification of state changes as defined by --mail-type. Default: liw82@pitt.edu" "liw82@pitt.edu"
 
     opts_AddMandatory '--subjectPath' 'subjectPath' 'path to file with subject IDs' "a required value; path to a file with the IDs of the subject to be processed must be absolute path (e.g. /pylon5/med200002p/liw82/KLU/90*/80*)" "--subject" "--subjectList" "--subjList"    
     opts_AddOptional '--printcom' 'RUN' 'do (not) perform a dray run' "an optional value; If RUN is not a null or empty string variable, then this script and other scripts that it calls will simply print out the primary commands it otherwise would run. This printing will be done using the command specified in the RUN variable, e.g., echo" "" "--PRINTCOM" "--printcom"
@@ -86,12 +60,11 @@ input_parser() {
 
     # Make slurm logs directory
     mkdir -p "$(dirname "$0")"/logs/slurm
-
-    studyName="$(basename -- $studyFolder)"
     files=wc -l $subjectPath
     echo files
+    
 	queuing_command="sbatch \
-        --job-name=${studyName}_${subjectIDs}_${scanIDs}_${jobName} \
+        --job-name=KLU \
         --partition=$partition \
         --exclude=$exclude \
         --nodes=$nodes \
@@ -104,7 +77,7 @@ input_parser() {
         --array=0-$files"
     #${queuing_command} echo $subjectPath[$SLURM_ARRAY_TASK_ID]
     #${queuing_command} CRC.sh \
-    #      --subjectIDs=$subjectPath
+    #      --subjectPath=$subjectPath
     #      --printcom=$RUN
 }
 
