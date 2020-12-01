@@ -60,7 +60,7 @@ input_parser() {
 
     # Make slurm logs directory
     mkdir -p "$(dirname "$0")"/logs/slurm
-    echo $subjectPath[0]
+    echo $subjectPath[0][0]
     files=187
 
     
