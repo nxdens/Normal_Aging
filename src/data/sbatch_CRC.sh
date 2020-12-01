@@ -60,9 +60,7 @@ input_parser() {
     # Make slurm logs directory
     mkdir -p "$(dirname "$0")"/logs/slurm
     mapfile -t subjectArr < fold.txt
-    for t in ${subjectArr[@]}; do
-        echo $t
-    done
+    echo ${subjectArr[10]}
     files=${#subjectArr[@]}
 	queuing_command="sbatch \
         --job-name=KLU \
@@ -76,7 +74,7 @@ input_parser() {
         --mail-user=$mailUser \
         --mem=$mem \
         --array=0-$files"
-    ${queuing_command} echo $subjectArr[$SLURM_ARRAY_TASK_ID]
+    ${queuing_command} echo ${subjectArr[$SLURM_ARRAY_TASK_ID]}
     #${queuing_command} CRC.sh \
     #      --subjectPath=$subjectPath
     #      --printcom=$RUN
