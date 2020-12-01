@@ -62,7 +62,7 @@ Usage: $log_ToolName
 
 input_parser() {
     # Load input parser functions
-    . "opts.shlib" "$@"
+    . "./opts.shlib" "$@"
 
     opts_AddMandatory '--studyFolder' 'studyFolder' 'raw data folder path' "a required value; is the path to the study folder holding the raw data. Don't forget the study name (e.g. /mnt/storinator/edd32/data/raw/ADNI)"
     opts_AddMandatory '--subjects' 'subjects' 'path to file with subject IDs' "a required value; path to a file with the IDs of the subject to be processed (e.g. /mnt/storinator/edd32/data/raw/ADNI/subjects.txt)" "--subject" "--subjectList" "--subjList"
