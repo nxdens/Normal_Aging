@@ -29,8 +29,8 @@ usage() {
 $log_ToolName: Queueing script for running MPP on Slurm-based computing clusters
 
 Usage: $log_ToolName
-                    --studyFolder=<path>                Path to folder with subject images
-                    --subjects=<path or list>           File path or list with subject IDs
+                    --subjectIDs=<ID>                Path to folder with subject images
+                    --scanIDs=<ID>           File path or list with subject IDs
                     [--printcom=command]                if 'echo' specified, will only perform a dry run.
 
     PARAMETERs are [ ] = optional; < > = user supplied value
