@@ -23,7 +23,6 @@ Usage: $log_ToolName
                     [--mail-type=<type of mail>] default=FAIL,END
                     [--mail-user=<user email>] default=eduardojdiniz@gmail.com
 
-                    --subjectPath=<path>                Path to folder with subject images
                     [--printcom=command]                if 'echo' specified, will only perform a dry run.
         PARAMETERs are [ ] = optional; < > = user supplied value
 
@@ -61,7 +60,7 @@ input_parser() {
     # Make slurm logs directory
     mkdir -p "$(dirname "$0")"/logs/slurm
     subjectPath=$(ls -d /pylon5/med200002p/liw82/KLU/90*/80*)
-    echo $subjectPath[0]
+    echo $subjectPath
     files=187
 
     
