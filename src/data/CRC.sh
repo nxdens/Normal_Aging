@@ -1,7 +1,6 @@
 #!/bin/bash
 
-#SBATCH --image=/pylon5/med200002p/liw82/freesurfer_7.1.1.sif
-# or skip the above line and call singularity exec <path_to_image> <command> instead of just <command> in the main portion of the code
+# call singularity exec <path_to_image> <command> 
 #SBATCH --error=./logs/slurm/slurm-%A_%a.err
 #SBATCH --output=./logs/slurm/slurm-%A_%a.out
 
@@ -16,6 +15,7 @@ NODE=$SLURMD_NODENAME
 # The directory from which sbatch was invoked (e.g. proj/DBN/src/data/MPP)
 SERVERDIR=$SLURM_SUBMIT_DIR
 LIW82=/pylon5/med200002p/liw82/
+IMAGE=/pylon5/med200002p/liw82/freesurfer_7.1.1.sif
 # This function gets called by opts_ParseArguments when --help is specified
 usage() {
     CURDIR="$(pwd)"
@@ -57,7 +57,6 @@ input_parser() {
 
 
 setup() {
-    SCP=/usr/bin/scp
     SSH=/usr/bin/ssh
 
     # Looks in the file of IDs and get the correspoding subject ID for this job
@@ -70,9 +69,6 @@ setup() {
 
     mkdir -p $NODEDIR
     echo Transferring files from server to compute node $NODE
-
-    # Copy MPP scripts from server to node, creating whatever directories required
-    $SCP -r $SERVERDIR $NODEDIR
 
     NCPU=`scontrol show hostnames $SLURM_JOB_NODELIST | wc -l`
     echo ------------------------------------------------------
@@ -89,8 +85,6 @@ setup() {
     echo ' '
     echo ' '
 
-    # Copy DATA from server to node, creating whatever directories required
-    $SCP -r $SUBJECTDIR $NODEDIR
 
     # Location of subject folders (named by subjectID)
     studyFolderBasename=`basename $studyFolder`;
@@ -143,29 +137,7 @@ main() {
     cd $NODEDIR
 
     # Submit to be run the MPP.sh script with all the specified parameter values
-    $NODEDIR/MPP/MPP.sh \
-        --studyName="$studyFolderBasename" \
-        --subject="$SubjectID" \
-        --class=$class \
-        --domainX="$domainX" \
-        --domainY="$domainY" \
-        --x="$xInputImages" \
-        --y="$yInputImages" \
-        --xTemplate="$xTemplate" \
-        --xTemplateBrain="$xTemplateBrain" \
-        --xTemplate2mm="$xTemplate2mm" \
-        --yTemplate="$yTemplate" \
-        --yTemplateBrain="$yTemplateBrain" \
-        --yTemplate2mm="$yTemplate2mm" \
-        --templateMask="$TemplateMask" \
-        --template2mmMask="$Template2mmMask" \
-        --brainSize="$BrainSize" \
-        --MNIRegistrationMethod="$MNIRegistrationMethod" \
-        --windowSize="$windowSize" \
-        --customBrain="$CustomBrain" \
-        --brainExtractionMethod="$BrainExtractionMethod" \
-        --FNIRTConfig="$FNIRTConfig" \
-        --printcom=$RUN \
+    singularity exec $IMAGE recon-all -sd $studyFolder -i imagepath -s $subjectID -all
         1> $LOGDIR/$SubjectID.out \
         2> $LOGDIR/$SubjectID.err
 }
