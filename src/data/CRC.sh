@@ -59,8 +59,8 @@ setup() {
     
     # The directory holding the data for the subject correspoinding ot this job
     # pass the path to each scan for each subject to each job -lw
-    subjectIDs=$(basename $subjectPath)
-    scanIDs=$(basename $(dirname $subjectPath))
+    scanIDs=$(basename $subjectPath)
+    subjectIDs=$(basename $(dirname $subjectPath))
     BASE=$LIW82/KLU/$subjectIDs/$scanIDs
     IMAGEDIR="$BASE/converted/Hires/${scanIDs}_Hires.nii"
     
