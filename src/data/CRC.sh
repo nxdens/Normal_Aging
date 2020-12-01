@@ -45,8 +45,8 @@ input_parser() {
     # Load input parser functions
     . "./opts.shlib" "$@"
 
-    opts_AddMandatory '--studyFolder' 'studyFolder' 'raw data folder path' "a required value; is the path to the study folder holding the raw data. Don't forget the study name (e.g. /mnt/storinator/edd32/data/raw/ADNI)"
-    opts_AddMandatory '--subjects' 'subjects' 'path to file with subject IDs' "a required value; path to a file with the IDs of the subject to be processed (e.g. /mnt/storinator/edd32/data/raw/ADNI/subjects.txt)" "--subject" "--subjectList" "--subjList"
+    opts_AddMandatory '--subjectIDs' 'subjectIDs' 'path to file with subject IDs' "a required value; path to a file with the IDs of the subject to be processed (e.g. /mnt/storinator/edd32/data/raw/ADNI/subjects.txt)" "--subject" "--subjectList" "--subjList"
+    opts_AddMandatory '--scanIDs' 'subjects' 'path to file with subject IDs' "a required value; path to a file with the IDs of the subject to be processed (e.g. /mnt/storinator/edd32/data/raw/ADNI/subjects.txt)" "--subject" "--subjectList" "--subjList"
     opts_AddOptional '--printcom' 'RUN' 'do (not) perform a dray run' "an optional value; If RUN is not a null or empty string variable, then this script and other scripts that it calls will simply print out the primary commands it otherwise would run. This printing will be done using the command specified in the RUN variable, e.g., echo" "" "--PRINTCOM" "--printcom"
 
     opts_ParseArguments "$@"
@@ -58,17 +58,17 @@ input_parser() {
 
 setup() {
     SSH=/usr/bin/ssh
-    echo "subjects: $subjects"
-    # Looks in the file of IDs and get the correspoding subject ID for this job
-    SubjectID=$(head -n $SLURM_ARRAY_TASK_ID "$subjects" | tail -n 1)
+    echo "ID: $subjectIDs"
+    echo "Scan: $subjectIDs"
     # The directory holding the data for the subject correspoinding ot this job
     # pass the path to each scan for each subject to each job -lw
-    SUBJECTDIR=$studyFolder/raw/$SubjectID
+    BASE=$LIW82/KLU/$subjectIDs/$scanIDS/
+    IMAGEDIR=$BASE/converted/Hires/
+    
     # Node directory that where computation will take place
-    NODEDIR=/pylon5/med200002p/liw82/KLU/${SubjectID}/step_01_Freesurfer/
-
-    mkdir -p $NODEDIR
-    echo Transferring files from server to compute node $NODE
+    SUBJECTDIR=$BASE/step_01_Freesurfer/
+    rm -r SUBJECTDIR
+    mkdir -p $SUBJECTDIR
 
     NCPU=`scontrol show hostnames $SLURM_JOB_NODELIST | wc -l`
     echo ------------------------------------------------------
@@ -77,7 +77,7 @@ setup() {
     echo SLURM: sbatch is running on $SERVER
     echo SLURM: server calling directory is $SERVERDIR
     echo SLURM: node is $NODE
-    echo SLURM: node working directory is $NODEDIR
+    echo SLURM: node working directory is $SUBJECTDIR
     echo SLURM: job name is $SLURM_JOB_NAME
     echo SLURM: master job identifier of the job array is $SLURM_ARRAY_JOB_ID
     echo SLURM: job array index identifier is $SLURM_ARRAY_TASK_ID
@@ -86,15 +86,15 @@ setup() {
     echo ' '
 
 
-    # Location of subject folders (named by subjectID)
-    studyFolderBasename=`basename $studyFolder`;
+    # Location of subject folder
+    studyFolderBasename=`basename $BASE`;
 
-    # Report major script control variables to usertart_auto_complete)cho "studyFolder: ${SERVERDATADIR}"
+    # Report major script control variables 
 	echo "subject:${SubjectID}"
 	echo "printcom: ${RUN}"
 
     # Create log folder
-    LOGDIR="${NODEDIR}/logs/"
+    LOGDIR="${SUBJECTDIR}/logs/"
     mkdir -p $LOGDIR
 
 }
@@ -116,20 +116,7 @@ main() {
 	# ${SubjectID}/${class}/${domainX}/${SubjectID}_${class}_${domainY}n.nii.gz
     ###############################################################################
 
-
-    # Detect Number of domain X Images and build list of full paths to them
-    Xs=($(find ${NODEDIR}/${SubjectID}/${class} -type f | grep "${domainX}.\/${SubjectID}_-_${class}_-_${domainX}.\.nii\.gz$"))
-    numXs=`echo "${#Xs[@]}"`
-    echo "Found ${numXs} ${domainX} Images for subject ${SubjectID}"
-    xInputImages=`join_by '@' ${Xs[@]}`
-
-    # Detect Number of domain Y Images and build list of full paths to them
-    Ys=($(find ${NODEDIR}/${SubjectID}/${class} -type f | grep "${domainY}.\/${SubjectID}_-_${class}_-_${domainY}.\.nii\.gz$"))
-    numYs=`echo "${#Ys[@]}"`
-    echo "Found ${numYs} ${domainY} Images for subject ${SubjectID}"
-    yInputImages=`join_by '@' ${Ys[@]}`
-
-    cd $NODEDIR
+    cd $BASE
 
     # Submit to be run the MPP.sh script with all the specified parameter values
     singularity exec $IMAGE recon-all -sd $studyFolder -i imagepath -s $subjectID -all
@@ -138,32 +125,6 @@ main() {
 }
 
 cleanup() {
-
-    permanent_dir=preprocessed/${BrainExtractionMethod}/${MNIRegistrationMethod}/${class}/${SubjectID}
-    log_dir=${studyFolder}/logs/${BrainExtractionMethod}/${MNIRegistrationMethod}/${class}
-    slurm_log_dir=${SERVERDIR}/logs/slurm/${BrainExtractionMethod}/${MNIRegistrationMethod}/${class}
-
-    echo ' '
-    echo Transferring files from node to server
-    echo "Writing files in permanent directory ${studyFolder}/${permanent_dir}"
-
-    mkdir -p ${studyFolder}/${permanent_dir}
-    $SCP  -r ${NODEDIR}/${studyFolderBasename}/${permanent_dir}/* ${studyFolder}/${permanent_dir}/
-
-    mkdir -p ${log_dir}
-    $SCP  -r ${NODEDIR}/logs/* ${log_dir}/
-
-    mkdir -p ${slurm_log_dir}
-    mv $SERVERDIR/logs/slurm/slurm-${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}.err ${slurm_log_dir}/slurm-${SubjectID}.err
-    mv $SERVERDIR/logs/slurm/slurm-${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}.out ${slurm_log_dir}/slurm-${SubjectID}.out
-    $SCP ${slurm_log_dir}/slurm-${SubjectID}.err ${log_dir}/
-    $SCP ${slurm_log_dir}/slurm-${SubjectID}.out ${log_dir}/
-
-    echo ' '
-    echo 'Files transfered to permanent directory, clean temporary directory and log files'
-    rm -rf /pylon5/med200002p/liw82/KLU/${SubjectID}/step_01_Freesurfer/
-    rm ${slurm_log_dir}/slurm-${SubjectID}.err
-    rm ${slurm_log_dir}/slurm-${SubjectID}.out
 
     crc-job-stats.py # gives stats of job, wall time, etc.
 }
