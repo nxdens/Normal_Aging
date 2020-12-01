@@ -38,7 +38,7 @@ input_parser() {
     . "./opts.shlib" "$@"
 
     opts_AddOptional '--job-name' 'jobName' 'name for job allocation' "an optional value; specify a name for the job allocation. Default: KLU" "KLU"
-    opts_AddOptional '--partition' 'partition' 'request a specifi partition' "an optional value; request a specific partition for the resource allocation (e.g. standard, workstation). Default: RM" "RM"
+    opts_AddOptional '--partition' 'partition' 'request a specifi partition' "an optional value; request a specific partition for the resource allocation (e.g. standard, workstation). Default: RM-shared" "RM-shared"
     opts_AddOptional  '--exclude' 'exclude' 'node to be excluded' "an optional value; Explicitly exclude certain nodes from the resources granted to the job. Default: None" ""
     opts_AddOptional  '--nodes' 'nodes' 'minimum number of nodes allocated to this job' "an optional value; iIf a job node limit exceeds the number of nodes configured in the partiition, the job will be rejected. Default: 1" "1"
     opts_AddOptional  '--time' 'time' 'limit on the total run time of the job allocation' "an optional value; When the time limit is reached, each task in each job step is sent SIGTERM followed by SIGKILL. Format: days-hours:minutes:seconds. Default 2 hours: None" "05:00:00"
@@ -73,7 +73,8 @@ input_parser() {
         --mail-type=$mailType \
         --mail-user=$mailUser \
         --mem=$mem \
-        --array=0-$files"
+        --array=0-$files \
+        --n-tasks-per-node=4"
     #${queuing_command} test.sh --subjectPath=${subjectArr[$SLURM_ARRAY_TASK_ID]}
     ${queuing_command} CRC.sh \
           --subjectPath=${subjectArr[$SLURM_ARRAY_TASK_ID]} \
