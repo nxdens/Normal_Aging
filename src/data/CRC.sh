@@ -6,13 +6,9 @@
 #SBATCH --output=./logs/slurm/slurm-%A_%a.out
 
 module purge # Make sure the modules environment is sane
-module load gcc/5.2.0
-module load fsl/5.0.11-centos
-module load matlab/R2019b
 module load singularity
-
 # or use #SBATCH --export=all module purge module load gcc/5.2.0 fsl/5.0.11-centos matlab/R2019b singularity
-
+EXPORT FS_LICENSE=/pylon5/med200002p/liw82/license.txt
 # The hostname from which sbatch was invoked (e.g. cluster)
 SERVER=$SLURM_SUBMIT_HOST
 # The name of the node running the job script (e.g. node10)
@@ -95,9 +91,10 @@ setup() {
     # Looks in the file of IDs and get the correspoding subject ID for this job
     SubjectID=$(head -n $SLURM_ARRAY_TASK_ID "$subjects" | tail -n 1)
     # The directory holding the data for the subject correspoinding ot this job
+    # pass the path to each scan for each subject to each job -lw
     SUBJECTDIR=$studyFolder/raw/$SubjectID
     # Node directory that where computation will take place
-    NODEDIR=/bgfs/tibrahim/edd32/scratch/work/SLURM_${BrainExtractionMethod}_${MNIRegistrationMethod}_${class}_${SubjectID}_${SLURM_JOB_ID}
+    NODEDIR=/pylon5/med200002p/liw82/KLU/${SubjectID}/step_01_Freesurfer/
 
     mkdir -p $NODEDIR
     echo Transferring files from server to compute node $NODE
@@ -250,7 +247,7 @@ cleanup() {
 
     echo ' '
     echo 'Files transfered to permanent directory, clean temporary directory and log files'
-    rm -rf /bgfs/tibrahim/edd32/scratch/work/SLURM_${BrainExtractionMethod}_${MNIRegistrationMethod}_${class}_${SubjectID}_${SLURM_JOB_ID}
+    rm -rf /pylon5/med200002p/liw82/KLU/${SubjectID}/step_01_Freesurfer/
     rm ${slurm_log_dir}/slurm-${SubjectID}.err
     rm ${slurm_log_dir}/slurm-${SubjectID}.out
 
