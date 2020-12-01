@@ -66,7 +66,6 @@ input_parser() {
         --job-name=KLU \
         --partition=$partition \
         --exclude=$exclude \
-        --nodes=$nodes \
         --time=$time \
         --ntasks=$nTasks \
         --export=$export \
@@ -74,7 +73,7 @@ input_parser() {
         --mail-user=$mailUser \
         --mem=$mem \
         --array=0-$files \
-        --ntasks-per-node=8"
+        --ntasks-per-node=187"
     #${queuing_command} test.sh --subjectPath=${subjectArr[$SLURM_ARRAY_TASK_ID]}
     ${queuing_command} CRC.sh \
           --subjectPath=${subjectArr[$SLURM_ARRAY_TASK_ID]} \
