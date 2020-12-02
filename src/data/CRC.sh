@@ -123,8 +123,7 @@ main() {
 
     # Submit to be run the MPP.sh script with all the specified parameter values
     singularity exec $IMAGE recon-all -sd $SUBJECTDIR -i $IMAGEDIR -s $scanIDs -all \
-        1> $LOGDIR/$subjectIDs.out \
-        2> $LOGDIR/$subjectIDs.err
+
 }
 
 cleanup() {
