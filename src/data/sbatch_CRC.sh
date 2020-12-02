@@ -62,6 +62,7 @@ input_parser() {
     mapfile -t subjectArr < fold.txt
     echo ${subjectArr[10]}
     files=${#subjectArr[@]}
+    echo $files
 	queuing_command="sbatch \
         --job-name=KLU \
         --partition=$partition \
