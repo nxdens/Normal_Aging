@@ -3,7 +3,6 @@
 # call singularity exec <path_to_image> <command> 
 #SBATCH --error=./logs/slurm/slurm-%A_%a.err
 #SBATCH --output=./logs/slurm/slurm-%A_%a.out
-set -x
 module purge # Make sure the modules environment is sane
 module load singularity
 # or use #SBATCH --export=all module purge module load gcc/5.2.0 fsl/5.0.11-centos matlab/R2019b singularity
