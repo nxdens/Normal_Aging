@@ -16,6 +16,7 @@ NODE=$SLURMD_NODENAME
 SERVERDIR=$SLURM_SUBMIT_DIR
 LIW82=/pylon5/med200002p/liw82
 IMAGE=/pylon5/med200002p/liw82/freesurfer_7.1.1.sif
+export FREESURFER_HOME=/pylon5/med200002p/liw82/freesurfer
 # This function gets called by opts_ParseArguments when --help is specified
 usage() {
     CURDIR="$(pwd)"
@@ -63,12 +64,12 @@ setup() {
     subjectIDs=$(basename $(dirname $subjectPath))
     BASE=$LIW82/KLU/$subjectIDs/$scanIDs
     IMAGEDIR="$BASE/converted/Hires/${scanIDs}_Hires.nii"
-    
+    source $FREESURFER_HOME/SetUpFreeSurfer.sh
     # Node directory that where computation will take place
     SUBJECTDIR=$BASE/step_01_Freesurfer/
     rm -r $SUBJECTDIR
     mkdir -p $SUBJECTDIR
-
+    export SUBJECTS_DIR=$SUBJECTDIR
     NCPU=`scontrol show hostnames $SLURM_JOB_NODELIST | wc -l`
     echo ------------------------------------------------------
     echo ' This job is allocated on '$NCPU' cpu(s)'
@@ -122,7 +123,7 @@ main() {
     cd $BASE
 
     # Submit to be run the MPP.sh script with all the specified parameter values
-    singularity exec $IMAGE recon-all -sd $SUBJECTDIR -i $IMAGEDIR -s $scanIDs -all \
+    $FREESURFER_HOME/bin/recon-all -i $IMAGEDIR -s $scanIDs -all 
 
 }
 
