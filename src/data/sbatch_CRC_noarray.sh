@@ -56,7 +56,6 @@ input_parser() {
 
     # Display the parsed/default values
     opts_ShowValues
-    set -x
     # Make slurm logs directory
     mkdir -p "$(dirname "$0")"/logs/slurm
     mapfile -t subjectArr < fold.txt
