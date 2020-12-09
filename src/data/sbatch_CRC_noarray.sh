@@ -18,7 +18,6 @@ Usage: $log_ToolName
                     [--nodes=<minimum number of nodes allocated to this job>] default="1"
                     [--time=<limit on the total run time of the job allocation>] default="1"
                     [--ntasks=<maximum number of tasks>] default=1
-                    [--mem=<specify the real memory required per node>] default=2gb
                     [--export=<export environment variables>] default=ALL
                     [--mail-type=<type of mail>] default=FAIL,END
                     [--mail-user=<user email>] default=eduardojdiniz@gmail.com
@@ -42,8 +41,7 @@ input_parser() {
     opts_AddOptional  '--exclude' 'exclude' 'node to be excluded' "an optional value; Explicitly exclude certain nodes from the resources granted to the job. Default: None" ""
     opts_AddOptional  '--nodes' 'nodes' 'minimum number of nodes allocated to this job' "an optional value; iIf a job node limit exceeds the number of nodes configured in the partiition, the job will be rejected. Default: 1" "1"
     opts_AddOptional  '--time' 'time' 'limit on the total run time of the job allocation' "an optional value; When the time limit is reached, each task in each job step is sent SIGTERM followed by SIGKILL. Format: days-hours:minutes:seconds. Default 2 hours: None" "12:00:00"
-    opts_AddOptional '--ntasks' 'nTasks' 'maximum number tasks' "an optional value; sbatch does not launch tasks, it requests an allocation of resources and submits a batch script. This option advises the Slurm controller that job steps run within the allocation will launch a maximum of number tasks and to provide for sufficient resources. Default: 1" "1"
-    opts_AddOptional  '--mem' 'mem' 'specify the real memory requried per node' "an optional value; specify the real memory required per node. Default: 2gb" "2gb"
+    opts_AddOptional '--ntasks' 'nTasks' 'maximum number tasks' "an optional value; sbatch does not launch tasks, it requests an allocation of resources and submits a batch script. This option advises the Slurm controller that job steps run within the allocation will launch a maximum of number tasks and to provide for sufficient resources. Default: 1" "1"   opts_AddOptional  '--mem' 'mem' 'specify the real memory requried per node' "an optional value; specify the real memory required per node. Default: 2gb" "2gb"
     opts_AddOptional  '--export' 'export' 'export environment variables' "an optional value; Identify which environment variables from the submission environment are propagated to the launched application. Note that SLURM_* variables are always propagated. Default: All of the users environment will be loaded (either from callers environment or clean environment" "ALL"
     opts_AddOptional  '--mail-type' 'mailType' 'type of mail' "an optional value; notify user by email when certain event types occur. Default: BEGIN,FAIL,END" "BEGINFAIL,END"
     opts_AddOptional  '--mail-user' 'mailUser' 'user email' "an optional value; User to receive email notification of state changes as defined by --mail-type. Default: liw82@pitt.edu" "liw82@pitt.edu"
@@ -61,7 +59,7 @@ input_parser() {
     mapfile -t subjectArr < fold.txt
     echo ${subjectArr[10]}
     files=${#subjectArr[@]}
-    for (( i=1; i<=$files; i++ )); do
+    for (( i=0; i<$files; i++ )); do
         queuing_command="sbatch \
             --job-name=KLU_${i} \
             --partition=$partition \
