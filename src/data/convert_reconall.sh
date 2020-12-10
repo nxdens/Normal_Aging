@@ -122,7 +122,7 @@ main() {
     # convert mgz to nii for given subject
     mri_convert --in_type mgz --out_type nii --out_orientation RAS $SUBJECTDIR/$scanIDs/mri/aseg.mgz $SUBJECTDIR/$scanIDs/aseg.nii.gz
     #generate aseg stats table for given subject
-    asegstats2table $SUBJECTDIR/$scanIDs/stats/aseg.stats --tablefile $SUBJECTDIR/$scanIDs/aseg_stats.txt
+    asegstats2table -i $SUBJECTDIR/$scanIDs/stats/aseg.stats --tablefile $SUBJECTDIR/$scanIDs/aseg_stats.txt
 
 }
 
