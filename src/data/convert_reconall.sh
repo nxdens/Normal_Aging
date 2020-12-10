@@ -65,7 +65,7 @@ setup() {
     IMAGEDIR="$BASE/converted/Hires/${scanIDs}_Hire.nii"
     source $FREESURFER_HOME/SetUpFreeSurfer.sh
     # Node directory that where computation will take place
-    SUBJECTDIR=$BASE/step_01_Freesurfer/
+    SUBJECTDIR=$BASE/step_01_Freesurfer
     rm -r $SUBJECTDIR
     mkdir -p $SUBJECTDIR
     export SUBJECTS_DIR=$SUBJECTDIR
@@ -121,9 +121,10 @@ main() {
 
     cd $BASE
 
-    # Submit to be run the MPP.sh script with all the specified parameter values
-    mri_convert --in_type mgz --out_type nii --out_orientation RAS $SUBJECTDIR/mri/aseg.mgz $SUBJECTDIR/aseg.nii.gz
-    asegstats2table $SUBJECTDIR/stats/aseg.stats --tablefile $SUBJECTDIR/aseg_stats.txt
+    # convert mgz to nii for given subject
+    mri_convert --in_type mgz --out_type nii --out_orientation RAS $SUBJECTDIR/$scanIDs/mri/aseg.mgz $SUBJECTDIR/$scanIDs/aseg.nii.gz
+    #generate aseg stats table for given subject
+    asegstats2table $SUBJECTDIR/$scanIDs/stats/aseg.stats --tablefile $SUBJECTDIR/$scanIDs/aseg_stats.txt
 
 }
 
