@@ -59,7 +59,7 @@ input_parser() {
     mapfile -t subjectArr < fold.txt
     echo ${subjectArr[10]}
     files=${#subjectArr[@]}
-    for (( i=73; i<74; i++ )); do
+    for (( i=0; i<$files; i++ )); do
         queuing_command="sbatch \
             --job-name=KLU_${i} \
             --partition=$partition \
