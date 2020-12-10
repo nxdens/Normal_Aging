@@ -62,7 +62,7 @@ setup() {
     scanIDs=$(basename $subjectPath)
     subjectIDs=$(basename $(dirname $subjectPath))
     BASE=$LIW82/KLU/$subjectIDs/$scanIDs
-    IMAGEDIR="$BASE/converted/Hires/${scanIDs}_Hire.nii"
+    IMAGEDIR="$BASE/converted/Hires/${scanIDs}_Hires.nii"
     source $FREESURFER_HOME/SetUpFreeSurfer.sh
     # Node directory that where computation will take place
     SUBJECTDIR=$BASE/step_01_Freesurfer/
