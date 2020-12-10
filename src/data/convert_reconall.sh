@@ -122,7 +122,8 @@ main() {
     cd $BASE
 
     # Submit to be run the MPP.sh script with all the specified parameter values
-    $FREESURFER_HOME/bin/recon-all -i $IMAGEDIR -s $scanIDs -all 
+    mri_convert --in_type mgz --out_type nii --out_orientation RAS $SUBJECTDIR/mri/aseg.mgz $SUBJECTDIR/aseg.nii.gz
+    asegstats2table $SUBJECTDIR/stats/aseg.stats --tablefile $SUBJECTDIR/aseg_stats.txt
 
 }
 
