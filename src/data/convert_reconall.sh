@@ -66,8 +66,6 @@ setup() {
     source $FREESURFER_HOME/SetUpFreeSurfer.sh
     # Node directory that where computation will take place
     SUBJECTDIR=$BASE/step_01_Freesurfer
-    rm -r $SUBJECTDIR
-    mkdir -p $SUBJECTDIR
     export SUBJECTS_DIR=$SUBJECTDIR
     NCPU=`scontrol show hostnames $SLURM_JOB_NODELIST | wc -l`
     echo ------------------------------------------------------
